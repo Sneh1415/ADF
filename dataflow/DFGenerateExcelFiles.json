@@ -1,0 +1,57 @@
+{
+	"name": "DFGenerateExcelFiles",
+	"properties": {
+		"description": "This data flow will generate different full and incremental load files",
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "SynapseDBFactInternetSales",
+						"type": "DatasetReference"
+					},
+					"name": "DBSource"
+				},
+				{
+					"dataset": {
+						"referenceName": "SynapseDBFactInternetSales",
+						"type": "DatasetReference"
+					},
+					"name": "DBSourceIFull1"
+				},
+				{
+					"dataset": {
+						"referenceName": "SynapseDBFactInternetSales",
+						"type": "DatasetReference"
+					},
+					"name": "DBSourceFull2"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ExcelFiles",
+						"type": "DatasetReference"
+					},
+					"name": "IncreamentalFile1"
+				},
+				{
+					"dataset": {
+						"referenceName": "ExcelFullFile1",
+						"type": "DatasetReference"
+					},
+					"name": "ExcelFileFullLoad1"
+				},
+				{
+					"dataset": {
+						"referenceName": "ExcelFileFull2",
+						"type": "DatasetReference"
+					},
+					"name": "ExcelFileFullLoad2"
+				}
+			],
+			"transformations": [],
+			"script": "source(output(\n\t\tProductKey as integer,\n\t\tOrderDateKey as integer,\n\t\tDueDateKey as integer,\n\t\tShipDateKey as integer,\n\t\tCustomerKey as integer,\n\t\tPromotionKey as integer,\n\t\tCurrencyKey as integer,\n\t\tSalesTerritoryKey as integer,\n\t\tSalesOrderNumber as string,\n\t\tSalesOrderLineNumber as integer,\n\t\tRevisionNumber as integer,\n\t\tOrderQuantity as short,\n\t\tUnitPrice as double,\n\t\tExtendedAmount as double,\n\t\tUnitPriceDiscountPct as double,\n\t\tDiscountAmount as double,\n\t\tProductStandardCost as double,\n\t\tTotalProductCost as double,\n\t\tSalesAmount as double,\n\t\tTaxAmt as double,\n\t\tFreight as double,\n\t\tCarrierTrackingNumber as string,\n\t\tCustomerPONumber as string,\n\t\tOrderDate as timestamp,\n\t\tDueDate as timestamp,\n\t\tShipDate as timestamp\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tquery: 'Select * From [prod].[FactInternetSales]\\nWhere ProductKey = 477 And OrderDateKey > 20130721',\n\tformat: 'query',\n\tstaged: false) ~> DBSource\nsource(output(\n\t\tProductKey as integer,\n\t\tOrderDateKey as integer,\n\t\tDueDateKey as integer,\n\t\tShipDateKey as integer,\n\t\tCustomerKey as integer,\n\t\tPromotionKey as integer,\n\t\tCurrencyKey as integer,\n\t\tSalesTerritoryKey as integer,\n\t\tSalesOrderNumber as string,\n\t\tSalesOrderLineNumber as integer,\n\t\tRevisionNumber as integer,\n\t\tOrderQuantity as integer,\n\t\tUnitPrice as decimal(19,4),\n\t\tExtendedAmount as decimal(19,4),\n\t\tUnitPriceDiscountPct as double,\n\t\tDiscountAmount as double,\n\t\tProductStandardCost as decimal(19,4),\n\t\tTotalProductCost as decimal(19,4),\n\t\tSalesAmount as decimal(19,4),\n\t\tTaxAmt as decimal(19,4),\n\t\tFreight as decimal(19,4),\n\t\tCarrierTrackingNumber as string,\n\t\tCustomerPONumber as string,\n\t\tOrderDate as timestamp,\n\t\tDueDate as timestamp,\n\t\tShipDate as timestamp\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tquery: 'Select * From [prod].[FactInternetSales] Where ProductKey BETWEEN 214 AND 476',\n\tformat: 'query',\n\tstaged: false) ~> DBSourceIFull1\nsource(output(\n\t\tProductKey as integer,\n\t\tOrderDateKey as integer,\n\t\tDueDateKey as integer,\n\t\tShipDateKey as integer,\n\t\tCustomerKey as integer,\n\t\tPromotionKey as integer,\n\t\tCurrencyKey as integer,\n\t\tSalesTerritoryKey as integer,\n\t\tSalesOrderNumber as string,\n\t\tSalesOrderLineNumber as integer,\n\t\tRevisionNumber as integer,\n\t\tOrderQuantity as integer,\n\t\tUnitPrice as decimal(19,4),\n\t\tExtendedAmount as decimal(19,4),\n\t\tUnitPriceDiscountPct as double,\n\t\tDiscountAmount as double,\n\t\tProductStandardCost as decimal(19,4),\n\t\tTotalProductCost as decimal(19,4),\n\t\tSalesAmount as decimal(19,4),\n\t\tTaxAmt as decimal(19,4),\n\t\tFreight as decimal(19,4),\n\t\tCarrierTrackingNumber as string,\n\t\tCustomerPONumber as string,\n\t\tOrderDate as timestamp,\n\t\tDueDate as timestamp,\n\t\tShipDate as timestamp\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tquery: 'Select * From [prod].[FactInternetSales] Where ProductKey BETWEEN 478 AND 606',\n\tformat: 'query',\n\tstaged: false) ~> DBSourceFull2\nDBSource sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['IncrementalLoadFile1'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> IncreamentalFile1\nDBSourceIFull1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['FullLoadFile1'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> ExcelFileFullLoad1\nDBSourceFull2 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['FullLoadFile2'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> ExcelFileFullLoad2"
+		}
+	}
+}

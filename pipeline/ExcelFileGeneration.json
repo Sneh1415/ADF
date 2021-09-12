@@ -1,0 +1,36 @@
+{
+	"name": "ExcelFileGeneration",
+	"properties": {
+		"description": "This pipeline will have data flow which will generate different full and incremental load files",
+		"activities": [
+			{
+				"name": "DFGenerateExcelFiles",
+				"description": "This data flow will generate different full and incremental load files",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "1.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "DFGenerateExcelFiles",
+						"type": "DataFlowReference"
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2021-09-12T12:14:13Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

@@ -1,0 +1,28 @@
+{
+	"name": "LoadDataForMapping",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "InputFile",
+						"type": "DatasetReference"
+					},
+					"name": "SourceFile"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "SynapseDBFactInternetSales",
+						"type": "DatasetReference"
+					},
+					"name": "DestinationTable"
+				}
+			],
+			"transformations": [],
+			"script": "source(output(\n\t\tProductKey as integer,\n\t\tOrderDateKey as integer,\n\t\tDueDateKey as integer,\n\t\tShipDateKey as integer,\n\t\tCustomerKey as integer,\n\t\tPromotionKey as integer,\n\t\tCurrencyKey as integer,\n\t\tSalesTerritoryKey as integer,\n\t\tSalesOrderNumber as string,\n\t\tSalesOrderLineNumber as integer,\n\t\tRevisionNumber as integer,\n\t\tOrderQuantity as integer,\n\t\tUnitPrice as float,\n\t\tExtendedAmount as float,\n\t\tUnitPriceDiscountPct as float,\n\t\tDiscountAmount as float,\n\t\tProductStandardCost as float,\n\t\tTotalProductCost as float,\n\t\tSalesAmount as float,\n\t\tTaxAmt as float,\n\t\tFreight as float,\n\t\tCarrierTrackingNumber as string,\n\t\tCustomerPONumber as string,\n\t\tOrderDate as timestamp,\n\t\tDueDate as timestamp,\n\t\tShipDate as timestamp\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> SourceFile\nSourceFile sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tProductKey as integer,\n\t\tOrderDateKey as integer,\n\t\tDueDateKey as integer,\n\t\tShipDateKey as integer,\n\t\tCustomerKey as integer,\n\t\tPromotionKey as integer,\n\t\tCurrencyKey as integer,\n\t\tSalesTerritoryKey as integer,\n\t\tSalesOrderNumber as string,\n\t\tSalesOrderLineNumber as integer,\n\t\tRevisionNumber as integer,\n\t\tOrderQuantity as integer,\n\t\tUnitPrice as decimal(19,4),\n\t\tExtendedAmount as decimal(19,4),\n\t\tUnitPriceDiscountPct as double,\n\t\tDiscountAmount as double,\n\t\tProductStandardCost as decimal(19,4),\n\t\tTotalProductCost as decimal(19,4),\n\t\tSalesAmount as decimal(19,4),\n\t\tTaxAmt as decimal(19,4),\n\t\tFreight as decimal(19,4),\n\t\tCarrierTrackingNumber as string,\n\t\tCustomerPONumber as string,\n\t\tOrderDate as timestamp,\n\t\tDueDate as timestamp,\n\t\tShipDate as timestamp\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tstaged: false,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tProductKey,\n\t\tOrderDateKey,\n\t\tDueDateKey,\n\t\tShipDateKey,\n\t\tCustomerKey,\n\t\tPromotionKey,\n\t\tCurrencyKey,\n\t\tSalesTerritoryKey,\n\t\tSalesOrderNumber,\n\t\tSalesOrderLineNumber,\n\t\tRevisionNumber,\n\t\tOrderQuantity,\n\t\tUnitPrice,\n\t\tExtendedAmount,\n\t\tUnitPriceDiscountPct,\n\t\tDiscountAmount,\n\t\tProductStandardCost,\n\t\tTotalProductCost,\n\t\tSalesAmount,\n\t\tTaxAmt,\n\t\tFreight,\n\t\tCarrierTrackingNumber,\n\t\tCustomerPONumber,\n\t\tOrderDate,\n\t\tDueDate,\n\t\tShipDate\n\t)) ~> DestinationTable"
+		}
+	}
+}
